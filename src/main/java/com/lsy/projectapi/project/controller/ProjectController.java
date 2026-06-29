@@ -11,7 +11,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/projects")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+//  로컬이니까 우선 전부 허용
+@CrossOrigin(origins = "")
 public class ProjectController {
     private final ProjectService projectService;
 
