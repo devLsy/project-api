@@ -4,13 +4,13 @@ server:
 spring:
   datasource:
     url: jdbc:oracle:thin:@localhost:1521:ORCL
-    username: YOUR_USERNAME
-    password: YOUR_PASSWORD
+    username: DEV_01
+    password: 1234
     driver-class-name: oracle.jdbc.OracleDriver
 
   jpa:
     hibernate:
-      ddl-auto: update   # ??? (?? ??? ??/??)
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
