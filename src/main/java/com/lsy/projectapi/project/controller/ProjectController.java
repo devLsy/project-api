@@ -4,9 +4,9 @@ import com.lsy.projectapi.project.dto.ProjectRequest;
 import com.lsy.projectapi.project.dto.ProjectResponse;
 import com.lsy.projectapi.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -16,12 +16,13 @@ public class ProjectController {
     private final ProjectService projectService;
 
     /**
-     * 목록 조회
+     * 목록 조회(페이지네이션)
+     * @param pageable
      * @return
      */
     @GetMapping
-    public List<ProjectResponse> findAll() {
-        return projectService.findAll();
+    public Page<ProjectResponse> getProjects(Pageable pageable) {
+        return projectService.getProjects(pageable);
     }
 
     /**
@@ -42,7 +43,7 @@ public class ProjectController {
      */
     @PutMapping("/{id}")
     public ProjectResponse update(
-            @PathVariable("id") Long id,
+            @PathVariable Long id,
             @RequestBody ProjectRequest request) {
 
         return projectService.update(id, request);
@@ -53,7 +54,7 @@ public class ProjectController {
      * @param id
      */
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    public void delete(@PathVariable Long id) {
         projectService.delete(id);
     }
 }
