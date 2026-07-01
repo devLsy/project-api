@@ -5,9 +5,9 @@ import com.lsy.projectapi.project.dto.ProjectResponse;
 import com.lsy.projectapi.project.entity.Project;
 import com.lsy.projectapi.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,16 +16,12 @@ public class ProjectService {
 
     /**
      * 목록 조회
+     * @param pageable pageable
      * @return
      */
-    public List<ProjectResponse> findAll() {
-        return projectRepository.findAll()
-                .stream()
-                .map(project -> ProjectResponse.builder()
-                        .id(project.getId())
-                        .name(project.getName())
-                        .build())
-                .toList();
+    public Page<ProjectResponse> getProjects(Pageable pageable) {
+        return projectRepository.findAll(pageable)
+                .map(p -> new ProjectResponse(p.getId(), p.getName()));
     }
 
     /**
@@ -36,7 +32,7 @@ public class ProjectService {
     public ProjectResponse save(ProjectRequest projectRequest) {
         Project project = Project.builder().name(projectRequest.getName()).build();
         Project saved = projectRepository.save(project);
-        return ProjectResponse.builder().id(saved.getId()).name(saved.getName()).build();
+        return new ProjectResponse(saved.getId(), saved.getName());
     }
 
     /**
@@ -46,11 +42,12 @@ public class ProjectService {
      * @return
      */
     public ProjectResponse update(Long id, ProjectRequest projectRequest) {
-        Project project = projectRepository.findById(id).orElseThrow();
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
         project.setName(projectRequest.getName());
 
         Project updated = projectRepository.save(project);
-        return ProjectResponse.builder().id(updated.getId()).name(updated.getName()).build();
+        return new ProjectResponse(updated.getId(), updated.getName());
     }
 
     /**
