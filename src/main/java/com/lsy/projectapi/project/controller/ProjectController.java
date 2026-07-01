@@ -18,11 +18,12 @@ public class ProjectController {
     /**
      * 목록 조회(페이지네이션)
      * @param pageable
+     * @param keyword
      * @return
      */
     @GetMapping
-    public Page<ProjectResponse> getProjects(Pageable pageable) {
-        return projectService.getProjects(pageable);
+    public Page<ProjectResponse> getProjects(Pageable pageable, @RequestParam(required = false, name = "keyword") String keyword) {
+        return projectService.getProjects(pageable, keyword);
     }
 
     /**
@@ -43,7 +44,7 @@ public class ProjectController {
      */
     @PutMapping("/{id}")
     public ProjectResponse update(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @RequestBody ProjectRequest request) {
 
         return projectService.update(id, request);
@@ -54,7 +55,7 @@ public class ProjectController {
      * @param id
      */
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable("id") Long id) {
         projectService.delete(id);
     }
 }

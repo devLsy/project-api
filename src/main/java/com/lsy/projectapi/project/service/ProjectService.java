@@ -16,12 +16,19 @@ public class ProjectService {
 
     /**
      * 목록 조회
-     * @param pageable pageable
+     * @param pageable
+     * @param keyword
      * @return
      */
-    public Page<ProjectResponse> getProjects(Pageable pageable) {
-        return projectRepository.findAll(pageable)
-                .map(p -> new ProjectResponse(p.getId(), p.getName()));
+    public Page<ProjectResponse> getProjects(Pageable pageable, String keyword) {
+
+        Page<Project> projects = (keyword == null || keyword.isBlank())
+            ? projectRepository.findAll(pageable)
+            : projectRepository.findByNameContaining(keyword, pageable);
+
+        return projects.map(project ->
+            new ProjectResponse(project.getId(), project.getName())
+        );
     }
 
     /**
